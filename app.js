@@ -2,10 +2,12 @@ let myLibrary = []
 
 const form = document.querySelector('[name="bookInput"]')
 const libraryDisplay = document.querySelector('#libraryDisplay')
+const bookShelf = document.querySelector('.bookShelf')
 
 form.addEventListener('submit', function (e) {
     console.log(e);
-    addBookToLibrary(getBookFromInput());
+    const book = getBookFromInput();
+    addBookToLibrary(book);
     e.preventDefault();
 })
 
@@ -29,25 +31,54 @@ function getBookFromInput() {
 }
 
 function addBookToLibrary(book) {
-    if (!isInLibrary(book)) myLibrary.push(book);
-    displayLibrary();
+    if (!isInLibrary(book)) {
+        myLibrary.push(book);
+        addBookToDisplay(book);
+        // displayLibrary();
+    } else {
+        alert("Book Already Exists")
+    }
+}
+
+function addBookToDisplay(bookInfo) {
+    const book = document.createElement("div");
+    const displayTitle = document.createElement("div");
+    const displayAuthor = document.createElement("div");
+    const displayPageCount = document.createElement("div");
+    const bookBtns = document.createElement("div")
+    const displayRead = document.createElement("button");
+    const displayDelete = document.createElement("button");
+
+    book.classList.add('book');
+    displayTitle.classList.add('bookTitle');
+    displayAuthor.classList.add('bookAuthor');
+    displayPageCount.classList.add('bookPageCount');
+    bookBtns.classList.add('bookBtns');
+    displayRead.classList.add('bookReadBtn');
+    displayDelete.classList.add('bookDelBtn');
+
+
+    displayTitle.textContent = bookInfo.title
+    displayAuthor.textContent = bookInfo.author
+    displayPageCount.textContent = `Page Count: ${bookInfo.numPages}`
+    displayRead.textContent = `${bookInfo.read === true ? "Read" : "Not Read"}`;
+    displayDelete.textContent = "Delete";
+
+    bookBtns.appendChild(displayDelete);
+    bookBtns.appendChild(displayRead);
+
+    book.appendChild(displayTitle);
+    book.appendChild(displayAuthor);
+    book.appendChild(displayPageCount);
+    book.appendChild(bookBtns);
+
+    bookShelf.appendChild(book);
 }
 
 function isInLibrary(newBook) {
     return myLibrary.some(book => book.title === newBook.title)
 }
 
-function displayLibrary() {
-    while (libraryDisplay.firstChild) {
-        libraryDisplay.removeChild(libraryDisplay.lastChild)
-    }
-
-    myLibrary.forEach(book => {
-        const newBook = document.createElement('li')
-        newBook.textContent = `${book.title} by ${book.author}`
-        libraryDisplay.appendChild(newBook)
-    });
-}
 
 const book1 = new Book("Harry Potter", 'JK Rowling', 534, true)
 const book2 = new Book("Cat in the Hat", 'Dr. Seuss', 42, true)
