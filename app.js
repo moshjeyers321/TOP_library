@@ -55,8 +55,13 @@ function addBookToDisplay(bookInfo) {
     author.classList.add('bookAuthor');
     pageCount.classList.add('bookPageCount');
     bookBtns.classList.add('bookBtns');
-    readBtn.classList.add('bookReadBtn', 'bookBtn');
+    readBtn.classList.add('bookReadBtn', `${bookInfo.isRead === true ? "read" : "unread"}`, 'bookBtn');
     deleteBtn.classList.add('bookDelBtn', 'bookBtn');
+
+    readBtn.addEventListener('click', () => {
+        // console.log(readBtn.parentElement.parentElement)
+        toggleRead(book, bookInfo.title);
+    })
 
     deleteBtn.addEventListener('click', () => {
         removeBook(bookInfo.title);
@@ -90,8 +95,14 @@ function removeBook(title) {
     bookShelf.removeChild(bookToRemove);
 }
 
-function toggleRead(book) {
-
+function toggleRead(book, title) {
+    const readBtn = book.lastChild.querySelector(".bookReadBtn")
+    readBtn.textContent === "Read" ? readBtn.textContent = "Unread" : readBtn.textContent = "Read";
+    myLibrary.map(el => {
+        if (el.title == title) {
+            el.read ? el.read = false : el.read = true;
+        }
+    })
 }
 
 const book1 = new Book("Harry Potter", 'JK Rowling', 534, true)
